@@ -2,18 +2,6 @@
 
 
 
-### YOLOv8 — The State of the Art (2023)
-
-YOLOv8, released by [Ultralytics](https://ultralytics.com) in January 2023, is the latest and most powerful generation:
-
-| Feature | What it means |
-|---|---|
-| **Anchor-Free Detection** | No longer needs pre-defined anchor boxes — faster training, better accuracy |
-| **C2f Backbone** | Cross-Stage Partial network with 2 feature pathways — richer feature extraction |
-| **FPN + PAN Neck** | Feature Pyramid Network + Path Aggregation Network — detects objects at all scales |
-| **Decoupled Head** | Separate heads for classification and box regression — higher accuracy |
-| **Ultralytics Library** | Clean Python API, auto-downloads weights, works out of the box |
-
 ### How Detection Works (Step by Step)
 
 ```
