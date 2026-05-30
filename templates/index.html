@@ -3,377 +3,682 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YOLOv8 Object Detection Explorer</title>
-  <meta name="description" content="An interactive YOLOv8 object detection explorer. Upload images or use your webcam to see real-time AI object detection powered by YOLOv8." />
+  <title>YOLOv8 Explorer — Object Detection Dashboard</title>
+  <meta name="description" content="Interactive YOLOv8 object detection dashboard. Detect objects in images and live webcam feeds with real-time AI." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
 
-<!-- ─── Header ─────────────────────────────────────────────────────────────── -->
-<header class="site-header">
-  <div class="header-inner">
-    <div class="logo">
-      <span class="logo-icon">🎯</span>
-      <div class="logo-text">
-        <span class="logo-title">YOLOv8 Explorer</span>
-        <span class="logo-sub">Object Detection Dashboard</span>
-      </div>
-    </div>
-    <div class="header-badges">
-      <span class="badge badge-model" id="badge-model">yolov8n</span>
-      <span class="badge badge-coco">COCO · 80 classes</span>
-      <span class="badge badge-status" id="badge-status">Ready</span>
-    </div>
-  </div>
-</header>
+<div class="app-shell">
 
-<!-- ─── Hero Section ────────────────────────────────────────────────────────── -->
-<section class="hero">
-  <div class="hero-content">
-    <h1 class="hero-title">
-      See AI See the World
-      <span class="hero-accent">in Real Time</span>
-    </h1>
-    <p class="hero-sub">
-      Upload an image or stream your webcam — YOLOv8 detects 80 types of objects
-      in a single neural network pass. No training required.
-    </p>
-    <div class="hero-stats">
-      <div class="stat-pill">
-        <span class="stat-num">~6ms</span>
-        <span class="stat-label">inference</span>
-      </div>
-      <div class="stat-pill">
-        <span class="stat-num">80</span>
-        <span class="stat-label">classes</span>
-      </div>
-      <div class="stat-pill">
-        <span class="stat-num">37.3</span>
-        <span class="stat-label">mAP</span>
-      </div>
-      <div class="stat-pill">
-        <span class="stat-num">6MB</span>
-        <span class="stat-label">model size</span>
-      </div>
-    </div>
-  </div>
-  <div class="hero-visual">
-    <div class="neural-net-anim">
-      <div class="nn-node input" style="--delay:0s"></div>
-      <div class="nn-node input" style="--delay:0.1s"></div>
-      <div class="nn-node input" style="--delay:0.2s"></div>
-      <div class="nn-node hidden" style="--delay:0.15s"></div>
-      <div class="nn-node hidden" style="--delay:0.25s"></div>
-      <div class="nn-node hidden" style="--delay:0.35s"></div>
-      <div class="nn-node hidden" style="--delay:0.2s"></div>
-      <div class="nn-node output" style="--delay:0.3s"></div>
-      <div class="nn-node output" style="--delay:0.4s"></div>
-    </div>
-  </div>
-</section>
-
-<!-- ─── How YOLOv8 Works ────────────────────────────────────────────────────── -->
-<section class="explainer">
-  <div class="explainer-inner">
-    <h2 class="section-title">How YOLOv8 Works</h2>
-    <p class="section-sub">YOLO = <strong>Y</strong>ou <strong>O</strong>nly <strong>L</strong>ook <strong>O</strong>nce — the key insight that makes it fast</p>
-    <div class="pipeline">
-      <div class="pipeline-step">
-        <div class="step-icon">🖼️</div>
-        <div class="step-label">Input Image</div>
-        <div class="step-desc">Any resolution image or video frame</div>
-      </div>
-      <div class="pipeline-arrow">→</div>
-      <div class="pipeline-step">
-        <div class="step-icon">🧠</div>
-        <div class="step-label">Backbone</div>
-        <div class="step-desc">C2f modules extract visual features at multiple scales</div>
-      </div>
-      <div class="pipeline-arrow">→</div>
-      <div class="pipeline-step">
-        <div class="step-icon">🔗</div>
-        <div class="step-label">Neck (FPN+PAN)</div>
-        <div class="step-desc">Fuses small & large features for multi-scale detection</div>
-      </div>
-      <div class="pipeline-arrow">→</div>
-      <div class="pipeline-step">
-        <div class="step-icon">📦</div>
-        <div class="step-label">Detection Head</div>
-        <div class="step-desc">Anchor-free: predicts boxes + class scores in one shot</div>
-      </div>
-      <div class="pipeline-arrow">→</div>
-      <div class="pipeline-step">
-        <div class="step-icon">✅</div>
-        <div class="step-label">NMS Output</div>
-        <div class="step-desc">Non-Max Suppression removes duplicate detections</div>
+  <!-- ═══════════════════════════════════════════════════════ SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-glyph">🎯</span>
+      <div>
+        <span class="logo-name">YOLOv8</span>
+        <span class="logo-tag">Explorer</span>
       </div>
     </div>
 
-    <div class="yolo-versions">
-      <h3>YOLO Family Timeline</h3>
-      <div class="version-row">
-        <div class="version-card old">
-          <span class="ver-name">YOLOv1</span>
-          <span class="ver-year">2016</span>
-          <span class="ver-note">Original — grid-based, single pass</span>
-        </div>
-        <div class="version-card old">
-          <span class="ver-name">YOLOv3</span>
-          <span class="ver-year">2018</span>
-          <span class="ver-note">Multi-scale anchors, Darknet-53</span>
-        </div>
-        <div class="version-card old">
-          <span class="ver-name">YOLOv5</span>
-          <span class="ver-year">2020</span>
-          <span class="ver-note">PyTorch, popular production choice</span>
-        </div>
-        <div class="version-card current">
-          <span class="ver-name">YOLOv8 ⭐</span>
-          <span class="ver-year">2023</span>
-          <span class="ver-note">Anchor-free, C2f backbone, best accuracy/speed</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ─── Main Demo Tabs ──────────────────────────────────────────────────────── -->
-<section class="demo-section">
-  <div class="demo-inner">
-    <div class="tab-nav" role="tablist">
-      <button class="tab-btn active" role="tab" data-tab="image" id="tab-image" aria-selected="true">
-        <span class="tab-icon">🖼️</span> Image Detection
+    <nav class="sidebar-nav" role="navigation" aria-label="Main navigation">
+      <button class="nav-item active" data-panel="detect" id="nav-detect" aria-label="Image Detection">
+        <span class="nav-icon">🔍</span>
+        <span class="nav-label">Detect</span>
       </button>
-      <button class="tab-btn" role="tab" data-tab="webcam" id="tab-webcam" aria-selected="false">
-        <span class="tab-icon">📷</span> Live Webcam
+      <button class="nav-item" data-panel="webcam" id="nav-webcam" aria-label="Live Webcam">
+        <span class="nav-icon">📷</span>
+        <span class="nav-label">Webcam</span>
       </button>
-      <button class="tab-btn" role="tab" data-tab="classes" id="tab-classes" aria-selected="false">
-        <span class="tab-icon">📋</span> COCO Classes
+      <button class="nav-item" data-panel="history" id="nav-history" aria-label="Detection History">
+        <span class="nav-icon">🕐</span>
+        <span class="nav-label">History</span>
+        <span class="nav-badge" id="history-badge" style="display:none">0</span>
       </button>
-      <button class="tab-btn" role="tab" data-tab="models" id="tab-models" aria-selected="false">
-        <span class="tab-icon">⚡</span> Model Sizes
+      <div class="nav-divider"></div>
+      <button class="nav-item" data-panel="learn" id="nav-learn" aria-label="Learn">
+        <span class="nav-icon">📚</span>
+        <span class="nav-label">Learn</span>
       </button>
+      <button class="nav-item" data-panel="models" id="nav-models" aria-label="Model Comparison">
+        <span class="nav-icon">⚡</span>
+        <span class="nav-label">Models</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sf-model">
+        <span class="sf-dot"></span>
+        <span class="sf-model-name" id="sf-model-name">yolov8n</span>
+      </div>
+      <div class="sf-info">COCO · 80 classes</div>
     </div>
+  </aside>
 
-    <!-- Tab: Image Detection -->
-    <div class="tab-panel active" id="panel-image" role="tabpanel">
-      <div class="panel-grid">
-        <!-- Upload card -->
-        <div class="card upload-card">
-          <h3 class="card-title">Upload Image</h3>
+  <!-- ═══════════════════════════════════════════════════════ MAIN -->
+  <div class="main-area">
 
-          <div class="drop-zone" id="drop-zone">
-            <div class="drop-icon">📁</div>
-            <p class="drop-text">Drag & drop an image here</p>
-            <p class="drop-sub">or click to browse</p>
-            <p class="drop-formats">JPG · PNG · BMP · WebP · up to 32MB</p>
-            <input type="file" id="file-input" accept="image/*" hidden />
-          </div>
-
-          <div class="preview-wrap" id="preview-wrap" style="display:none">
-            <img id="preview-img" class="preview-img" alt="Preview" />
-            <button class="btn-clear" id="btn-clear">✕ Clear</button>
-          </div>
-
-          <div class="conf-row">
-            <label for="conf-slider" class="conf-label">
-              Confidence Threshold: <span id="conf-value">0.35</span>
-            </label>
-            <input type="range" id="conf-slider" min="5" max="95" value="35" step="5" class="conf-slider" />
-            <div class="conf-hint">
-              Lower → more detections &nbsp;|&nbsp; Higher → fewer but confident
+    <!-- ─── Topbar ─────────────────────────────────────────────── -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+          <span></span><span></span><span></span>
+        </button>
+        <span class="topbar-title" id="topbar-title">Image Detection</span>
+      </div>
+      <div class="topbar-right">
+        <div class="model-switcher-group" id="model-switcher-group">
+          <label class="switcher-label" for="model-switcher">Model</label>
+          <div class="switcher-wrap">
+            <select class="model-switcher" id="model-switcher" aria-label="Select YOLOv8 model">
+              <option value="yolov8n.pt" selected>yolov8n · nano · fastest</option>
+              <option value="yolov8s.pt">yolov8s · small</option>
+              <option value="yolov8m.pt">yolov8m · medium</option>
+              <option value="yolov8l.pt">yolov8l · large</option>
+              <option value="yolov8x.pt">yolov8x · xlarge · best</option>
+            </select>
+            <div class="model-loading-wrap" id="model-loading-wrap" style="display:none">
+              <div class="mini-spinner"></div>
+              <span>Loading…</span>
             </div>
           </div>
-
-          <button class="btn-detect" id="btn-detect" disabled>
-            <span class="btn-icon">🎯</span> Run Detection
-          </button>
         </div>
+        <div class="status-pill" id="status-pill">
+          <span class="status-dot" id="status-dot"></span>
+          <span class="status-text" id="status-text">Ready</span>
+        </div>
+      </div>
+    </header>
 
-        <!-- Results card -->
-        <div class="card results-card">
-          <h3 class="card-title">Detection Results</h3>
+    <!-- ─── Content Area ──────────────────────────────────────── -->
+    <main class="content-area" id="content-area">
 
-          <div class="results-placeholder" id="results-placeholder">
-            <div class="placeholder-icon">👈</div>
-            <p>Upload an image and click "Run Detection"</p>
-            <p class="placeholder-sub">Results will appear here with the annotated image</p>
-          </div>
+      <!-- ══════════════════════════════ PANEL: DETECT -->
+      <div class="panel active" id="panel-detect" role="tabpanel">
+        <div class="detect-grid">
 
-          <div class="results-content" id="results-content" style="display:none">
-            <!-- Annotated image -->
-            <img id="result-img" class="result-img" alt="Detection result" />
+          <!-- Upload card -->
+          <div class="card upload-card">
+            <div class="card-header">
+              <h2 class="card-title">Upload Image</h2>
+              <span class="card-chip">JPG · PNG · BMP · WebP</span>
+            </div>
 
-            <!-- Stats bar -->
-            <div class="stats-bar" id="stats-bar">
-              <div class="stat-item">
-                <span class="stat-val" id="stat-count">0</span>
-                <span class="stat-lbl">objects</span>
+            <div class="drop-zone" id="drop-zone" tabindex="0" role="button" aria-label="Upload image">
+              <div class="dz-content">
+                <div class="dz-icon">📂</div>
+                <p class="dz-text">Drop image here</p>
+                <p class="dz-sub">or click to browse · max 32 MB</p>
               </div>
-              <div class="stat-item">
-                <span class="stat-val" id="stat-ms">0ms</span>
-                <span class="stat-lbl">inference</span>
+              <input type="file" id="file-input" accept="image/*" hidden aria-label="Select image file" />
+            </div>
+
+            <div class="preview-wrap" id="preview-wrap" style="display:none">
+              <img id="preview-img" class="preview-img" alt="Image preview" />
+              <button class="btn-clear-img" id="btn-clear" aria-label="Remove image">✕ Remove</button>
+            </div>
+
+            <div class="control-block">
+              <div class="control-row">
+                <span class="control-label">Confidence threshold</span>
+                <span class="control-val" id="conf-value">0.35</span>
               </div>
-              <div class="stat-item">
-                <span class="stat-val" id="stat-classes">0</span>
-                <span class="stat-lbl">classes</span>
+              <input type="range" id="conf-slider" class="slider" min="5" max="95" value="35" step="5"
+                     aria-label="Confidence threshold" aria-valuemin="0.05" aria-valuemax="0.95" />
+              <div class="slider-hint">
+                <span>More objects ←</span>
+                <span>→ More confident</span>
               </div>
             </div>
 
-            <!-- Detection list -->
-            <div class="detection-list" id="detection-list"></div>
+            <button class="btn-primary" id="btn-detect" disabled aria-label="Run YOLOv8 detection">
+              <span>🎯</span> Run Detection
+            </button>
           </div>
 
-          <!-- Loading overlay -->
-          <div class="loading-overlay" id="loading-overlay" style="display:none">
-            <div class="spinner"></div>
-            <p class="loading-text">Running YOLOv8...</p>
-            <p class="loading-sub">Extracting features · Detecting objects · NMS</p>
+          <!-- Results card -->
+          <div class="card results-card">
+
+            <div class="results-empty" id="results-empty">
+              <div class="empty-boxes">
+                <div class="ebox" style="--d:0s"></div>
+                <div class="ebox" style="--d:.15s"></div>
+                <div class="ebox" style="--d:.3s"></div>
+              </div>
+              <p class="empty-msg">Upload an image and click Run Detection</p>
+            </div>
+
+            <div class="results-fill" id="results-fill" style="display:none">
+
+              <div class="results-topbar">
+                <h2 class="card-title">Results</h2>
+                <div class="dl-group">
+                  <button class="btn-dl" id="btn-dl-img" title="Download annotated image">⬇ Image</button>
+                  <button class="btn-dl" id="btn-dl-json" title="Download JSON data">⬇ JSON</button>
+                </div>
+              </div>
+
+              <img id="result-img" class="result-img" alt="Annotated detection result" />
+
+              <div class="metrics-row">
+                <div class="metric-tile">
+                  <span class="metric-val" id="stat-count">—</span>
+                  <span class="metric-lbl">objects</span>
+                </div>
+                <div class="metric-tile highlight">
+                  <span class="metric-val" id="stat-ms">—</span>
+                  <span class="metric-lbl">inference</span>
+                </div>
+                <div class="metric-tile">
+                  <span class="metric-val" id="stat-classes">—</span>
+                  <span class="metric-lbl">classes</span>
+                </div>
+                <div class="metric-tile">
+                  <span class="metric-val" id="stat-model-badge">n</span>
+                  <span class="metric-lbl">model</span>
+                </div>
+              </div>
+
+              <div class="results-cols">
+                <div class="results-col">
+                  <h4 class="col-title">Detections</h4>
+                  <div class="detection-list" id="detection-list"></div>
+                </div>
+                <div class="results-col">
+                  <h4 class="col-title">Distribution</h4>
+                  <div class="dist-chart" id="dist-chart"></div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="loading-overlay" id="loading-overlay" style="display:none">
+              <div class="spinner-ring"></div>
+              <p class="loading-label">Running YOLOv8…</p>
+              <p class="loading-sub">backbone → neck → head → NMS</p>
+            </div>
+
+          </div><!-- /results-card -->
+        </div><!-- /detect-grid -->
+      </div><!-- /panel-detect -->
+
+      <!-- ══════════════════════════════ PANEL: WEBCAM -->
+      <div class="panel" id="panel-webcam" role="tabpanel">
+        <div class="webcam-layout">
+
+          <div class="card webcam-card">
+            <div class="card-header webcam-header">
+              <div>
+                <h2 class="card-title">Live Webcam Detection</h2>
+                <p class="card-subtitle">Real-time YOLOv8 inference on every frame</p>
+              </div>
+              <div class="webcam-controls">
+                <button class="btn-primary btn-sm" id="btn-webcam-start">▶ Start</button>
+                <button class="btn-danger btn-sm" id="btn-webcam-stop" disabled>⏹ Stop</button>
+                <button class="btn-secondary btn-sm" id="btn-snapshot" disabled>📸 Snapshot</button>
+                <div class="inline-conf">
+                  <span class="control-label">Conf</span>
+                  <input type="range" id="webcam-conf-slider" class="slider slider-sm" min="5" max="95" value="35" step="5" />
+                  <span id="webcam-conf-value" class="conf-badge">0.35</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="webcam-frame" id="webcam-frame">
+              <img id="webcam-img" class="webcam-stream" style="display:none" alt="Live webcam with detections" />
+              <div class="webcam-idle" id="webcam-idle">
+                <div class="cam-anim">
+                  <div class="cam-ring"></div>
+                  <span class="cam-emoji">📷</span>
+                </div>
+                <p>Click <strong>Start</strong> to begin live detection</p>
+                <p class="webcam-note">Ensure your browser allows camera access</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card snapshot-card">
+            <h3 class="card-title">Snapshots</h3>
+            <p class="card-subtitle">Click 📸 Snapshot while the webcam is live</p>
+            <div class="snapshot-list" id="snapshot-list">
+              <div class="snap-empty" id="snap-empty">
+                <span>📷</span>
+                <p>No snapshots yet</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /panel-webcam -->
+
+      <!-- ══════════════════════════════ PANEL: HISTORY -->
+      <div class="panel" id="panel-history" role="tabpanel">
+        <div class="panel-top">
+          <div>
+            <h2 class="panel-title">Detection History</h2>
+            <p class="panel-sub">Last <strong>10</strong> image detections — click any to re-view</p>
+          </div>
+          <button class="btn-secondary btn-sm" id="btn-clear-history">🗑 Clear All</button>
+        </div>
+
+        <div class="history-grid" id="history-grid">
+          <div class="history-empty" id="history-empty">
+            <div class="he-icon">📋</div>
+            <p>No detections yet</p>
+            <p class="he-hint">Run image detection to see history here</p>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Tab: Webcam -->
-    <div class="tab-panel" id="panel-webcam" role="tabpanel">
-      <div class="card webcam-card">
-        <h3 class="card-title">Live Webcam Detection</h3>
-        <p class="card-sub">Your webcam feed with real-time YOLOv8 detection. Objects are detected on every frame.</p>
-
-        <div class="webcam-controls">
-          <button class="btn-webcam-start" id="btn-webcam-start">
-            <span>▶</span> Start Webcam
-          </button>
-          <button class="btn-webcam-stop" id="btn-webcam-stop" disabled>
-            <span>⏹</span> Stop
-          </button>
-          <div class="conf-row inline-conf">
-            <label for="webcam-conf-slider" class="conf-label">
-              Conf: <span id="webcam-conf-value">0.35</span>
-            </label>
-            <input type="range" id="webcam-conf-slider" min="5" max="95" value="35" step="5" class="conf-slider" />
+        <!-- History detail overlay -->
+        <div class="history-detail-overlay" id="history-detail" style="display:none">
+          <div class="history-detail-card">
+            <button class="hd-close" id="hd-close">✕</button>
+            <h3 class="hd-title">Detection Details</h3>
+            <img id="hd-img" class="hd-img" alt="Detection result" />
+            <div class="hd-meta" id="hd-meta"></div>
           </div>
         </div>
+      </div><!-- /panel-history -->
 
-        <div class="webcam-frame-wrap">
-          <img id="webcam-img" class="webcam-stream" alt="Webcam stream" style="display:none" />
-          <div class="webcam-placeholder" id="webcam-placeholder">
-            <div class="cam-icon">📷</div>
-            <p>Click "Start Webcam" to begin</p>
-            <p class="webcam-note">
-              ⚠️ Make sure your browser allows camera access.<br/>
-              The server must be running with a physical webcam connected.
-            </p>
+      <!-- ══════════════════════════════ PANEL: LEARN -->
+      <div class="panel" id="panel-learn" role="tabpanel">
+        <div class="learn-hero">
+          <h2 class="panel-title">What Every Engineering Student Should Know</h2>
+          <p class="panel-sub">A structured deep-dive into Computer Vision, CNNs, and YOLOv8 — written for people who want to understand the <em>why</em>, not just run the code.</p>
+        </div>
+
+        <div class="learn-grid">
+
+          <!-- 1: Computer Vision & CNNs -->
+          <div class="learn-card" id="lc-1">
+            <button class="lc-header" onclick="toggleCard('lc-1')" aria-expanded="true">
+              <div class="lc-header-left">
+                <span class="lc-num">01</span>
+                <div>
+                  <span class="lc-icon">👁️</span>
+                  <span class="lc-title">Computer Vision &amp; Convolutional Neural Networks</span>
+                </div>
+              </div>
+              <span class="lc-arrow">▾</span>
+            </button>
+            <div class="lc-body open">
+              <p class="lc-intro">Computers don't "see" like humans. Every image is just a <strong>3D array of numbers</strong> — shape <code>(height, width, 3)</code> where each pixel is an RGB triplet from 0–255.</p>
+              <div class="concept-box">
+                <div class="cb-title">How a CNN extracts meaning from pixels</div>
+                <p>A <strong>Convolutional Neural Network</strong> learns to detect patterns by sliding small matrices (kernels) across the image. Each kernel fires when it sees its pattern:</p>
+                <div class="layer-viz">
+                  <div class="layer-row"><div class="layer-chip l1">Layer 1–3</div><div class="layer-desc">Edges, gradients, corners</div></div>
+                  <div class="layer-row"><div class="layer-chip l2">Layer 5–10</div><div class="layer-desc">Textures, patterns (fur, scales, fabric)</div></div>
+                  <div class="layer-row"><div class="layer-chip l3">Layer 15–25</div><div class="layer-desc">Parts (wheels, eyes, doors, legs)</div></div>
+                  <div class="layer-row"><div class="layer-chip l4">Layer 30+</div><div class="layer-desc">Whole objects (car, dog, person)</div></div>
+                </div>
+                <div class="code-block">
+<pre><span class="cm"># A 3×3 edge-detecting Sobel kernel (CNNs LEARN values like these)</span>
+kernel = [[-1,  0,  1],
+          [-2,  0,  2],   <span class="cm"># Fires strongly on vertical edges</span>
+          [-1,  0,  1]]
+
+<span class="cm"># In PyTorch, the convolution operation:</span>
+output = F.conv2d(image, weight=kernel, padding=1)</pre>
+                </div>
+              </div>
+              <div class="key-insight">
+                💡 <strong>Key insight:</strong> You don't hand-craft these kernels. Backpropagation + gradient descent finds the optimal values automatically from millions of training examples.
+              </div>
+            </div>
+          </div>
+
+          <!-- 2: Detection vs Classification -->
+          <div class="learn-card" id="lc-2">
+            <button class="lc-header" onclick="toggleCard('lc-2')" aria-expanded="false">
+              <div class="lc-header-left">
+                <span class="lc-num">02</span>
+                <div>
+                  <span class="lc-icon">📦</span>
+                  <span class="lc-title">Object Detection vs Classification</span>
+                </div>
+              </div>
+              <span class="lc-arrow">▾</span>
+            </button>
+            <div class="lc-body">
+              <div class="compare-grid">
+                <div class="compare-col c-left">
+                  <div class="compare-tag easy">Classification</div>
+                  <div class="compare-q">Q: What is in this image?</div>
+                  <div class="compare-a">A: <code>"dog"</code></div>
+                  <p>One label per whole image. Solved well since AlexNet (2012).</p>
+                </div>
+                <div class="compare-arrow">→</div>
+                <div class="compare-col c-right">
+                  <div class="compare-tag hard">Object Detection</div>
+                  <div class="compare-q">Q: What is here, and where?</div>
+                  <div class="compare-a">A: <code>[("dog", 0.94, [120,80,380,420]), ...]</code></div>
+                  <p>Multiple boxes + labels + scores. YOLO solves both simultaneously.</p>
+                </div>
+              </div>
+              <p class="lc-note">Detection is harder because the model must solve <strong>localization</strong> (where?) and <strong>classification</strong> (what?) together. Before YOLO, pipelines ran in two stages — slow. YOLO's breakthrough: one forward pass solves both.</p>
+            </div>
+          </div>
+
+          <!-- 3: YOLO Architecture -->
+          <div class="learn-card" id="lc-3">
+            <button class="lc-header" onclick="toggleCard('lc-3')" aria-expanded="false">
+              <div class="lc-header-left">
+                <span class="lc-num">03</span>
+                <div>
+                  <span class="lc-icon">🧠</span>
+                  <span class="lc-title">YOLOv8 Architecture: Backbone → Neck → Head</span>
+                </div>
+              </div>
+              <span class="lc-arrow">▾</span>
+            </button>
+            <div class="lc-body">
+              <div class="arch-flow">
+                <div class="arch-step a-backbone">
+                  <div class="as-title">Backbone (C2f)</div>
+                  <div class="as-body">Extracts feature maps at 3 scales: 80×80, 40×40, 20×20. Large grids detect small objects; small grids detect large objects.</div>
+                </div>
+                <div class="arch-connector">↓ feature maps</div>
+                <div class="arch-step a-neck">
+                  <div class="as-title">Neck (FPN + PAN)</div>
+                  <div class="as-body">Feature Pyramid Network merges features top-down (coarse → fine). Path Aggregation Network adds bottom-up path. Rich multi-scale representation.</div>
+                </div>
+                <div class="arch-connector">↓ fused features</div>
+                <div class="arch-step a-head">
+                  <div class="as-title">Head (Decoupled · Anchor-Free)</div>
+                  <div class="as-body">Two separate branches: <strong>regression</strong> (predicts bounding boxes) + <strong>classification</strong> (predicts class probabilities). No anchor templates needed.</div>
+                </div>
+                <div class="arch-connector">↓ raw predictions</div>
+                <div class="arch-step a-nms">
+                  <div class="as-title">NMS (Non-Max Suppression)</div>
+                  <div class="as-body">If two boxes overlap by more than the IoU threshold (~50%), keep only the highest-confidence box. Removes duplicate detections of the same object.</div>
+                </div>
+              </div>
+              <div class="key-insight">
+                💡 <strong>Anchor-free explained:</strong> YOLOv1–5 needed pre-defined "anchor boxes" — fixed aspect-ratio templates. If your objects didn't match these templates, accuracy suffered. YOLOv8 predicts distances from grid-cell centers directly. Simpler, faster to train, more accurate.
+              </div>
+            </div>
+          </div>
+
+          <!-- 4: Key Metrics -->
+          <div class="learn-card" id="lc-4">
+            <button class="lc-header" onclick="toggleCard('lc-4')" aria-expanded="false">
+              <div class="lc-header-left">
+                <span class="lc-num">04</span>
+                <div>
+                  <span class="lc-icon">📊</span>
+                  <span class="lc-title">Key Metrics: mAP, IoU, Precision, Recall</span>
+                </div>
+              </div>
+              <span class="lc-arrow">▾</span>
+            </button>
+            <div class="lc-body">
+              <div class="metrics-explain">
+                <div class="me-item">
+                  <div class="me-name">IoU</div>
+                  <div class="me-formula">Overlap ÷ Union</div>
+                  <div class="me-desc">How much does the predicted box cover the true box? 0 = no overlap, 1.0 = perfect. A detection is "correct" if IoU ≥ 0.5.</div>
+                </div>
+                <div class="me-item">
+                  <div class="me-name">Precision</div>
+                  <div class="me-formula">TP ÷ (TP + FP)</div>
+                  <div class="me-desc">Of all our predictions, how many were actually correct? High precision → few false alarms.</div>
+                </div>
+                <div class="me-item">
+                  <div class="me-name">Recall</div>
+                  <div class="me-formula">TP ÷ (TP + FN)</div>
+                  <div class="me-desc">Of all real objects, how many did we find? High recall → few missed objects.</div>
+                </div>
+                <div class="me-item">
+                  <div class="me-name">mAP50-95</div>
+                  <div class="me-formula">Mean AP @ [0.5:0.95]</div>
+                  <div class="me-desc">Industry-standard. Averaged over all 80 COCO classes AND IoU thresholds 0.50 to 0.95 in steps of 0.05. YOLOv8n = 37.3.</div>
+                </div>
+              </div>
+              <div class="tradeoff-box">
+                <div class="tb-title">⚖️ The Precision–Recall Trade-off</div>
+                <p>Lowering confidence threshold → <strong>higher recall</strong> (find more objects) but <strong>lower precision</strong> (more false positives). This is controlled by the confidence slider in this app. Try it!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5: Transfer Learning -->
+          <div class="learn-card" id="lc-5">
+            <button class="lc-header" onclick="toggleCard('lc-5')" aria-expanded="false">
+              <div class="lc-header-left">
+                <span class="lc-num">05</span>
+                <div>
+                  <span class="lc-icon">🔄</span>
+                  <span class="lc-title">Transfer Learning — Standing on Giant Shoulders</span>
+                </div>
+              </div>
+              <span class="lc-arrow">▾</span>
+            </button>
+            <div class="lc-body">
+              <p class="lc-intro">Training YOLOv8 from scratch on COCO required <strong>8× NVIDIA A100 GPUs for days</strong>. You don't need to do that ever.</p>
+              <div class="concept-box">
+                <div class="cb-title">How transfer learning works in practice</div>
+                <ol class="concept-list">
+                  <li>Take <code>yolov8n.pt</code> — weights from training on 118,000 COCO images</li>
+                  <li>The model already knows edges, textures, object parts, shapes</li>
+                  <li>Add your own dataset (even 100–500 labeled images)</li>
+                  <li>Fine-tune: only the last layers re-learn (takes hours, not days)</li>
+                </ol>
+                <div class="code-block">
+<pre><span class="cm"># Fine-tune YOLOv8 on your own custom dataset</span>
+from ultralytics import YOLO
+
+model = YOLO(<span class="cs">"yolov8n.pt"</span>)  <span class="cm"># Start from pre-trained weights</span>
+
+results = model.train(
+    data=<span class="cs">"my_dataset.yaml"</span>,  <span class="cm"># Your classes + image paths</span>
+    epochs=<span class="cn">50</span>,
+    imgsz=<span class="cn">640</span>,
+    batch=<span class="cn">16</span>,
+)
+<span class="cm"># Done — now model detects YOUR custom objects</span></pre>
+                </div>
+              </div>
+              <div class="key-insight">
+                💡 <strong>Why it works:</strong> Low-level features (edges, textures) are universal — a wheel in a car photo looks the same as in a bicycle photo. High-level, class-specific knowledge is what you're fine-tuning. You're literally "transferring" general visual knowledge to your specific task.
+              </div>
+            </div>
+          </div>
+
+          <!-- 6: Real-World Applications -->
+          <div class="learn-card" id="lc-6">
+            <button class="lc-header" onclick="toggleCard('lc-6')" aria-expanded="false">
+              <div class="lc-header-left">
+                <span class="lc-num">06</span>
+                <div>
+                  <span class="lc-icon">🌍</span>
+                  <span class="lc-title">Real-World Engineering Applications</span>
+                </div>
+              </div>
+              <span class="lc-arrow">▾</span>
+            </button>
+            <div class="lc-body">
+              <div class="apps-grid">
+                <div class="app-card">
+                  <div class="app-emoji">🚗</div>
+                  <div class="app-name">Autonomous Vehicles</div>
+                  <div class="app-desc">Tesla FSD, Waymo — detect pedestrians, vehicles, signs at 60+ FPS. Safety-critical: missing one object = accident.</div>
+                </div>
+                <div class="app-card">
+                  <div class="app-emoji">🏥</div>
+                  <div class="app-name">Medical Imaging</div>
+                  <div class="app-desc">Detect tumors in X-rays, CT scans, MRIs. FDA-approved systems match radiologist accuracy on some tasks.</div>
+                </div>
+                <div class="app-card">
+                  <div class="app-emoji">🏭</div>
+                  <div class="app-name">Industrial QC</div>
+                  <div class="app-desc">Inspect parts on production lines at thousands per minute. Finds defects invisible to human inspectors at speed.</div>
+                </div>
+                <div class="app-card">
+                  <div class="app-emoji">🌾</div>
+                  <div class="app-name">Precision Agriculture</div>
+                  <div class="app-desc">Count fruits, detect crop disease, monitor plant health via drones. Reduces chemical use by 30–50%.</div>
+                </div>
+                <div class="app-card">
+                  <div class="app-emoji">📦</div>
+                  <div class="app-name">Amazon Go / Logistics</div>
+                  <div class="app-desc">Track what customers take from shelves. No checkout needed — computer vision bills automatically.</div>
+                </div>
+                <div class="app-card">
+                  <div class="app-emoji">🔬</div>
+                  <div class="app-name">Scientific Research</div>
+                  <div class="app-desc">Track animal behavior, count cells in microscopy, detect galaxies in astronomical images.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 7: Roadmap -->
+          <div class="learn-card" id="lc-7">
+            <button class="lc-header" onclick="toggleCard('lc-7')" aria-expanded="false">
+              <div class="lc-header-left">
+                <span class="lc-num">07</span>
+                <div>
+                  <span class="lc-icon">🗺️</span>
+                  <span class="lc-title">Your Learning Roadmap as an Engineering Student</span>
+                </div>
+              </div>
+              <span class="lc-arrow">▾</span>
+            </button>
+            <div class="lc-body">
+              <div class="roadmap">
+                <div class="rm-step done">
+                  <div class="rm-marker">✅</div>
+                  <div class="rm-body">
+                    <div class="rm-title">Stage 1 — You are here</div>
+                    <div class="rm-desc">Running pre-trained inference. Understanding bounding boxes, confidence scores, COCO classes, mAP.</div>
+                  </div>
+                </div>
+                <div class="rm-step">
+                  <div class="rm-marker">2</div>
+                  <div class="rm-body">
+                    <div class="rm-title">Stage 2 — Python for Data Science</div>
+                    <div class="rm-desc">NumPy (array ops), Pandas (data), Matplotlib (plotting). These are the daily tools of every CV engineer.</div>
+                  </div>
+                </div>
+                <div class="rm-step">
+                  <div class="rm-marker">3</div>
+                  <div class="rm-body">
+                    <div class="rm-title">Stage 3 — Deep Learning Foundations</div>
+                    <div class="rm-desc">Backpropagation, SGD, loss functions, CNNs. fast.ai course + deep.ai Specialization are both excellent.</div>
+                  </div>
+                </div>
+                <div class="rm-step">
+                  <div class="rm-marker">4</div>
+                  <div class="rm-body">
+                    <div class="rm-title">Stage 4 — Train on Custom Data</div>
+                    <div class="rm-desc">Label with Roboflow → export YOLO format → fine-tune → evaluate. This is where the real learning happens.</div>
+                  </div>
+                </div>
+                <div class="rm-step">
+                  <div class="rm-marker">5</div>
+                  <div class="rm-body">
+                    <div class="rm-title">Stage 5 — Deploy to Edge Devices</div>
+                    <div class="rm-desc">Export to ONNX → TensorRT → run on Raspberry Pi or NVIDIA Jetson. Real-time on a $35 board.</div>
+                  </div>
+                </div>
+                <div class="rm-step final">
+                  <div class="rm-marker">🚀</div>
+                  <div class="rm-body">
+                    <div class="rm-title">Stage 6 — Build a Real Product</div>
+                    <div class="rm-desc">A working system that solves a real problem. This is what gets you internships, research positions, and jobs. Start now.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="resource-row">
+                <a class="resource-link" href="https://www.fast.ai" target="_blank" rel="noopener">fast.ai →</a>
+                <a class="resource-link" href="https://roboflow.com" target="_blank" rel="noopener">Roboflow →</a>
+                <a class="resource-link" href="https://docs.ultralytics.com" target="_blank" rel="noopener">Ultralytics →</a>
+                <a class="resource-link" href="https://cocodataset.org" target="_blank" rel="noopener">COCO Dataset →</a>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /learn-grid -->
+      </div><!-- /panel-learn -->
+
+      <!-- ══════════════════════════════ PANEL: MODELS -->
+      <div class="panel" id="panel-models" role="tabpanel">
+        <div class="panel-top">
+          <h2 class="panel-title">Model Comparison</h2>
+          <p class="panel-sub">All 5 YOLOv8 variants — same architecture, different scale. Switch models live from the topbar.</p>
+        </div>
+
+        <div class="models-layout">
+          <div class="card">
+            <h3 class="card-title">Specifications</h3>
+            <div class="table-wrap">
+              <table class="spec-table" id="spec-table">
+                <thead>
+                  <tr>
+                    <th>Model</th><th>Size</th><th>Parameters</th>
+                    <th>mAP50-95</th><th>CPU Latency</th><th>Best For</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-model="n" class="current-model-row">
+                    <td><code class="pill-n">yolov8n</code> <span class="active-tag" id="active-tag-n">● active</span></td>
+                    <td>6 MB</td><td>3.2M</td><td>37.3</td><td>1.4 ms</td><td>Learning, real-time CPU</td>
+                  </tr>
+                  <tr data-model="s">
+                    <td><code class="pill-s">yolov8s</code> <span class="active-tag" id="active-tag-s" style="display:none">● active</span></td>
+                    <td>22 MB</td><td>11.2M</td><td>44.9</td><td>2.4 ms</td><td>Edge devices</td>
+                  </tr>
+                  <tr data-model="m">
+                    <td><code class="pill-m">yolov8m</code> <span class="active-tag" id="active-tag-m" style="display:none">● active</span></td>
+                    <td>52 MB</td><td>25.9M</td><td>50.2</td><td>5.2 ms</td><td>Balanced</td>
+                  </tr>
+                  <tr data-model="l">
+                    <td><code class="pill-l">yolov8l</code> <span class="active-tag" id="active-tag-l" style="display:none">● active</span></td>
+                    <td>87 MB</td><td>43.7M</td><td>52.9</td><td>8.1 ms</td><td>High accuracy, GPU rec.</td>
+                  </tr>
+                  <tr data-model="x">
+                    <td><code class="pill-x">yolov8x</code> <span class="active-tag" id="active-tag-x" style="display:none">● active</span></td>
+                    <td>136 MB</td><td>68.2M</td><td>53.9</td><td>13.4 ms</td><td>Maximum accuracy</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Latency vs Accuracy</h3>
+            <div class="chart-section">
+              <h4 class="chart-label">CPU Inference Speed (ms, lower = faster)</h4>
+              <div class="bar-chart" id="speed-bars">
+                <div class="bc-row"><span class="bc-name pill-n">nano</span><div class="bc-bar" style="--pct:11%"><span>1.4ms</span></div></div>
+                <div class="bc-row"><span class="bc-name pill-s">small</span><div class="bc-bar" style="--pct:18%"><span>2.4ms</span></div></div>
+                <div class="bc-row"><span class="bc-name pill-m">med</span><div class="bc-bar" style="--pct:39%"><span>5.2ms</span></div></div>
+                <div class="bc-row"><span class="bc-name pill-l">large</span><div class="bc-bar" style="--pct:61%"><span>8.1ms</span></div></div>
+                <div class="bc-row"><span class="bc-name pill-x">xlarge</span><div class="bc-bar" style="--pct:100%"><span>13.4ms</span></div></div>
+              </div>
+            </div>
+            <div class="chart-section">
+              <h4 class="chart-label">mAP50-95 Accuracy (higher = better)</h4>
+              <div class="bar-chart" id="accuracy-bars">
+                <div class="bc-row"><span class="bc-name pill-n">nano</span><div class="bc-bar acc" style="--pct:69%"><span>37.3</span></div></div>
+                <div class="bc-row"><span class="bc-name pill-s">small</span><div class="bc-bar acc" style="--pct:83%"><span>44.9</span></div></div>
+                <div class="bc-row"><span class="bc-name pill-m">med</span><div class="bc-bar acc" style="--pct:93%"><span>50.2</span></div></div>
+                <div class="bc-row"><span class="bc-name pill-l">large</span><div class="bc-bar acc" style="--pct:98%"><span>52.9</span></div></div>
+                <div class="bc-row"><span class="bc-name pill-x">xlarge</span><div class="bc-bar acc" style="--pct:100%"><span>53.9</span></div></div>
+              </div>
+            </div>
           </div>
         </div>
+      </div><!-- /panel-models -->
 
-        <div class="webcam-tip">
-          💡 Tip: For best results use <strong>detect_webcam.py</strong> script directly — it runs locally with lower latency!
-        </div>
-      </div>
-    </div>
-
-    <!-- Tab: Classes -->
-    <div class="tab-panel" id="panel-classes" role="tabpanel">
-      <div class="card classes-card">
-        <h3 class="card-title">80 COCO Object Classes</h3>
-        <p class="card-sub">
-          YOLOv8 is trained on the <strong>COCO dataset</strong> (Common Objects in Context).
-          It can detect these 80 everyday object categories right out of the box — no training needed!
-        </p>
-        <div class="classes-search-wrap">
-          <input type="text" id="classes-search" class="classes-search" placeholder="🔍 Search classes..." />
-        </div>
-        <div class="classes-grid" id="classes-grid">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Tab: Model Sizes -->
-    <div class="tab-panel" id="panel-models" role="tabpanel">
-      <div class="card models-card">
-        <h3 class="card-title">YOLOv8 Model Variants</h3>
-        <p class="card-sub">
-          Choose the right model for your use case. Larger = more accurate but slower.
-          <strong>yolov8n</strong> is what this project uses — it's great for learning!
-        </p>
-        <div class="models-table-wrap">
-          <table class="models-table" id="models-table">
-            <thead>
-              <tr>
-                <th>Model</th>
-                <th>Size</th>
-                <th>Parameters</th>
-                <th>mAP50-95</th>
-                <th>Speed (CPU)</th>
-                <th>Best For</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="current-model">
-                <td><span class="model-name">yolov8n</span> <span class="current-tag">← this project</span></td>
-                <td>6 MB</td><td>3.2M</td><td>37.3</td><td>~1.4ms</td>
-                <td>Learning, real-time on CPU</td>
-              </tr>
-              <tr>
-                <td><span class="model-name">yolov8s</span></td>
-                <td>22 MB</td><td>11.2M</td><td>44.9</td><td>~2.4ms</td>
-                <td>Edge devices, IoT</td>
-              </tr>
-              <tr>
-                <td><span class="model-name">yolov8m</span></td>
-                <td>52 MB</td><td>25.9M</td><td>50.2</td><td>~5.2ms</td>
-                <td>Balanced accuracy/speed</td>
-              </tr>
-              <tr>
-                <td><span class="model-name">yolov8l</span></td>
-                <td>87 MB</td><td>43.7M</td><td>52.9</td><td>~8.1ms</td>
-                <td>High accuracy, GPU recommended</td>
-              </tr>
-              <tr>
-                <td><span class="model-name">yolov8x</span></td>
-                <td>136 MB</td><td>68.2M</td><td>53.9</td><td>~13.4ms</td>
-                <td>Maximum accuracy, GPU required</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="accuracy-note">
-          <strong>mAP50-95</strong> = Mean Average Precision at IoU thresholds from 0.50 to 0.95.
-          Higher is better. Measured on COCO val2017.
-        </div>
-
-        <div class="speed-bars">
-          <h4>Relative Speed (lower = faster)</h4>
-          <div class="speed-bar-row"><span>yolov8n</span><div class="sbar" style="--w:14%"><span>1.4ms</span></div></div>
-          <div class="speed-bar-row"><span>yolov8s</span><div class="sbar" style="--w:24%"><span>2.4ms</span></div></div>
-          <div class="speed-bar-row"><span>yolov8m</span><div class="sbar" style="--w:52%"><span>5.2ms</span></div></div>
-          <div class="speed-bar-row"><span>yolov8l</span><div class="sbar" style="--w:81%"><span>8.1ms</span></div></div>
-          <div class="speed-bar-row"><span>yolov8x</span><div class="sbar" style="--w:100%"><span>13.4ms</span></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ─── Footer ──────────────────────────────────────────────────────────────── -->
-<footer class="site-footer">
-  <div class="footer-inner">
-    <p>🎯 <strong>YOLOv8 Object Detection Explorer</strong> — built with Ultralytics YOLOv8 + Flask</p>
-    <p class="footer-links">
-      <a href="https://docs.ultralytics.com" target="_blank" rel="noopener">Ultralytics Docs</a>
-      &nbsp;·&nbsp;
-      <a href="https://cocodataset.org" target="_blank" rel="noopener">COCO Dataset</a>
-      &nbsp;·&nbsp;
-      <a href="https://arxiv.org/abs/2304.00501" target="_blank" rel="noopener">YOLOv8 Paper</a>
-    </p>
-  </div>
-</footer>
+    </main>
+  </div><!-- /main-area -->
+</div><!-- /app-shell -->
 
 <script src="/static/js/app.js"></script>
 </body>
