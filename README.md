@@ -1,16 +1,6 @@
 # 🎯 YOLOv8 Object Detection Explorer
 
 
-## 📖 What is YOLOv8?
-
-
-
-> **"What if we did detection in a single forward pass?"**
-
-That's the core idea behind **YOLO (You Only Look Once)** — the network sees the full image once, and simultaneously predicts:
-- **Where** objects are (bounding boxes)
-- **What** they are (class labels)
-- **How confident** it is (confidence scores)
 
 ### YOLOv8 — The State of the Art (2023)
 
