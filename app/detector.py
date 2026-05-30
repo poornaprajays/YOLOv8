@@ -204,3 +204,24 @@ def get_detector(model_name: str = "yolov8n.pt", confidence: float = 0.35) -> YO
     if _detector_instance is None:
         _detector_instance = YOLODetector(model_name=model_name, confidence=confidence)
     return _detector_instance
+
+
+def set_detector_model(model_name: str, confidence: float = 0.35) -> YOLODetector:
+    """
+    Hot-swap the global detector to a new model.
+    Called by the /api/set-model endpoint when the user picks a different
+    model variant from the UI dropdown.
+
+    Why this matters (engineering insight):
+      Loading a new model takes 1–5 seconds because PyTorch must:
+        1. Read the .pt file (weights binary)
+        2. Deserialize the model graph
+        3. Move tensors to the target device (CPU/GPU)
+      After loading, all subsequent requests use the cached instance
+      → zero overhead.
+    """
+    global _detector_instance
+    print(f"[YOLODetector] Switching model → {model_name}")
+    _detector_instance = YOLODetector(model_name=model_name, confidence=confidence)
+    return _detector_instance
+

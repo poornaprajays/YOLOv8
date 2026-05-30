@@ -21,4 +21,6 @@ if __name__ == "__main__":
     print("  Model    : YOLOv8n (nano) — auto-downloaded")
     print("  Press CTRL+C to stop the server")
     print("=" * 55 + "\n")
-    app.run(debug=True, host="0.0.0.0", port=5000, threaded=True)
+    # use_reloader=False fixes a watchdog crash on Python 3.13
+    # (TypeError: 'handle' must be a _ThreadHandle)
+    app.run(debug=True, host="0.0.0.0", port=5000, threaded=True, use_reloader=False)
