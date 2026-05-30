@@ -33,22 +33,6 @@ NMS — Non-Maximum Suppression
 Final Detections: [(class, confidence, bbox), ...]
 ```
 
-### Key Concepts Explained
-
-**Bounding Box**: A rectangle defined by (x1, y1, x2, y2) corners that surrounds a detected object.
-
-**Confidence Score**: How sure the model is that something is an object AND that it belongs to the predicted class. Range: 0 to 1.
-
-**IoU (Intersection over Union)**: Measures how much two boxes overlap. Used to evaluate detection quality.
-```
-IoU = Area of Overlap / Area of Union
-```
-
-**mAP (mean Average Precision)**: The standard metric for object detection. Higher = better.
-- mAP50 = measured at IoU threshold 0.50
-- mAP50-95 = averaged over thresholds 0.50 to 0.95
-
-**NMS (Non-Max Suppression)**: Algorithm that removes duplicate detections of the same object by keeping the highest-confidence box and removing all others that overlap with it above an IoU threshold.
 
 ---
 
