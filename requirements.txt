@@ -1,0 +1,18 @@
+# YOLOv8 Object Detection Explorer — Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core YOLOv8 engine (auto-downloads model weights)
+ultralytics>=8.0.0
+
+# Web framework for the dashboard
+flask>=3.0.0
+
+# Computer vision & image processing
+opencv-python>=4.8.0
+Pillow>=10.0.0
+
+# Numerical computing (usually installed with ultralytics)
+numpy>=1.24.0
+
+# For pretty CLI output in standalone scripts
+rich>=13.0.0
