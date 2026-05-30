@@ -3,13 +3,7 @@
 
 ## 📖 What is YOLOv8?
 
-### The Big Idea: You Only Look Once
 
-Traditional object detectors worked in **two stages**:
-1. First, propose regions of interest (where objects might be)
-2. Then, classify each proposed region
-
-This was slow because the network runs twice. YOLO changed everything in 2016 by asking:
 
 > **"What if we did detection in a single forward pass?"**
 
