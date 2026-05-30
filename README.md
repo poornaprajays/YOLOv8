@@ -412,14 +412,6 @@ taskkill /PID <PID> /F
 
 ---
 
-## 🎓 Next Steps After This Project
-
-1. **Train on your own data** — `yolo train data=mydata.yaml model=yolov8n.pt epochs=100`
-2. **Try segmentation** — `yolov8n-seg.pt` adds pixel-level masks
-3. **Try pose estimation** — `yolov8n-pose.pt` detects human keypoints
-4. **Deploy to edge** — Export to ONNX or TensorRT for embedded devices
-5. **Custom classes** — Collect and label your own dataset with [Label Studio](https://labelstud.io)
-
 ---
 
 *Built with love using [Ultralytics YOLOv8](https://ultralytics.com) · [Flask](https://flask.palletsprojects.com) · [OpenCV](https://opencv.org)*
