@@ -215,26 +215,7 @@ python scripts/detect_webcam.py
 --camera   INT    Camera index (default: 0). Try 1 or 2 for external webcams.
 ```
 
----
 
-## 📊 Model Size Comparison
-
-| Model | File Size | Parameters | mAP50-95 | CPU Speed | Best For |
-|---|---|---|---|---|---|
-| **yolov8n** (this project) | 6 MB | 3.2M | 37.3 | ~1.4ms | Learning, real-time CPU |
-| yolov8s | 22 MB | 11.2M | 44.9 | ~2.4ms | Edge devices |
-| yolov8m | 52 MB | 25.9M | 50.2 | ~5.2ms | Balanced |
-| yolov8l | 87 MB | 43.7M | 52.9 | ~8.1ms | High accuracy |
-| yolov8x | 136 MB | 68.2M | 53.9 | ~13.4ms | Maximum accuracy |
-
-> This project uses **yolov8n** (nano) by default. It's the fastest, runs on CPU, and is perfect for learning. The weights auto-download on first use.
-
-To switch models, just change the `--model` argument:
-```bash
-python scripts/detect_image.py --image dog.jpg --model yolov8s.pt
-```
-
----
 
 ## 🏷️ COCO Dataset — 80 Object Classes
 
