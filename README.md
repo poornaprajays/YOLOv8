@@ -1,13 +1,5 @@
 # 🎯 YOLOv8 Object Detection Explorer
 
-> A complete, beginner-friendly project to **understand, run, and visualize** YOLOv8 object detection — with standalone scripts, a live webcam detector, and a beautiful web dashboard.
-
-[![Python](https://img.shields.io/badge/Python-3.9%2B-blue?logo=python)](https://python.org)
-[![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-purple)](https://ultralytics.com)
-[![Flask](https://img.shields.io/badge/Flask-3.0-black?logo=flask)](https://flask.palletsprojects.com)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-
----
 
 ## 📖 What is YOLOv8?
 
