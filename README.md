@@ -1,9 +1,6 @@
 # 🎯 YOLOv8 Object Detection Explorer
 
 
-
-### How Detection Works (Step by Step)
-
 ```
 Input Image (any size, resized to 640x640 internally)
       |
